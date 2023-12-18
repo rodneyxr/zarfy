@@ -1,6 +1,6 @@
 ZARF_VERSION=v0.31.4
 ZARF_ARCH=$(shell [ $(shell uname -m) = "x86_64" ] && echo "amd64" || echo "arm64";)
-INSTALL_LOCATION=/usr/local/bin/zarf
+INSTALL_LOCATION=/usr/bin/zarf
 
 check:
 	@echo "ZARF_VERSION: ${ZARF_VERSION}"
