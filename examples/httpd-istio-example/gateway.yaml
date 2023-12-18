@@ -13,4 +13,4 @@ spec:
       protocol: HTTP
     hosts:
     - "zarf.local"
-    - "api.zarf.local"
+    - "*.zarf.local"

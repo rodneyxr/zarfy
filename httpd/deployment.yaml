@@ -17,3 +17,27 @@ spec:
         image: httpd:alpine3.19
         ports:
         - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: tls-certs
+          mountPath: /etc/ssl/certs
+          readOnly: true  # Ensure certs are read-only
+        - name: tls-private
+          mountPath: /etc/ssl/private
+          readOnly: true  # Ensure private key is read-only
+      volumes:
+        - name: tls-certs
+          secret:
+            secretName: istio-system/zarf-tls
+            items:
+            - key: tls.crt
+              path: tls.crt
+            - key: ca.crt
+              path: ca.crt
+        - name: tls-private
+          secret:
+            secretName: istio-system/zarf-tls
+            items:
+            - key: tls.key
+              path: tls.key
+            

@@ -7,14 +7,14 @@ spec:
   replicas: 3  # Desired number of pods
   selector:
     matchLabels:
-      app: nginx
+      app: httpd
   template:
     metadata:
       labels:
-        app: nginx
+        app: httpd
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
+      - name: httpd
+        image: httpd:alpine3.19
         ports:
         - containerPort: 80
