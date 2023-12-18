@@ -58,19 +58,42 @@ destroy:
 #######################################
 # PLUGINS
 #######################################
-build: build-istio
+install-plugins: install-istio install-cert-manager
+build-plugins: build-istio build-cert-manager
+clean-plugins: clean-istio clean-cert-manager
 
 #######################################
 # Istio
 #######################################
+ISTIO_PACKAGE=istio/zarf-package-istio-${ZARF_ARCH}.tar.zst
+
 install-istio: build-istio
 	@echo "Installing Istio package"
-	@zarf package deploy istio/zarf-package-istio-${ZARF_ARCH}.tar.zst --confirm
-build-istio: istio/zarf-package-istio-${ZARF_ARCH}.tar.zst
-istio/zarf-package-istio-${ZARF_ARCH}.tar.zst: istio/
+	@zarf package deploy ${ISTIO_PACKAGE} --confirm
+
+build-istio: ${ISTIO_PACKAGE}
+
+${ISTIO_PACKAGE}: istio/
 	@echo "Building Istio package"
 	@cd istio && zarf package create --confirm
-clean-istio:
-	@rm -f istio/zarf-package-istio-${ZARF_ARCH}.tar.zst || true
 
-clean: clean-istio
+clean-istio:
+	@rm -f ${ISTIO_PACKAGE} || true
+
+#######################################
+# Cert Manager
+#######################################
+CERT_MANAGER_PACKAGE=cert-manager/zarf-package-cert-manager-${ZARF_ARCH}.tar.zst
+
+install-cert-manager: build-cert-manager
+	@echo "Installing Cert Manager package"
+	@zarf package deploy ${CERT_MANAGER_PACKAGE} --confirm
+
+build-cert-manager: ${CERT_MANAGER_PACKAGE}
+
+${CERT_MANAGER_PACKAGE}: cert-manager/
+	@echo "Building Cert Manager package"
+	@cd cert-manager && zarf package create --confirm
+
+clean-cert-manager:
+	@rm -f ${CERT_MANAGER_PACKAGE} || true
