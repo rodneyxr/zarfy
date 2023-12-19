@@ -1,0 +1,18 @@
+kind: ZarfPackageConfig
+metadata:
+  name: ca
+
+variables:
+  - name: DOMAIN
+    default: zarf.local
+    prompt: false
+
+components:
+  - name: ca
+    required: true
+    manifests:
+      - name: ca
+        namespace: istio-system
+        files:
+          - certificate.yaml
+          - issuer.yaml

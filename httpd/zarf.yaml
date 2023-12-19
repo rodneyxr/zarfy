@@ -1,0 +1,35 @@
+kind: ZarfPackageConfig
+metadata:
+  name: httpd
+
+variables:
+  - name: DOMAIN
+    default: zarf.local
+    prompt: false
+
+components:
+  - name: httpd
+    required: true
+    manifests:
+      - name: httpd-deployment
+        namespace: httpd
+        files:
+          - certificate.yaml
+          - deployment.yaml
+          - gateway.yaml
+
+    actions:
+      onDeploy:
+      # the following checks were computed by viewing the success state of the package deployment
+      # and creating `wait` actions that match
+        after:
+          - wait:
+              cluster:
+                kind: deployment
+                name: httpd-deployment
+                namespace: httpd
+                condition: '{.status.readyReplicas}=2'
+    # image discovery is supported in all manifests and charts using:
+    # zarf prepare find-images
+    images:
+      - docker.io/httpd:alpine3.19

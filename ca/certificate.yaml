@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: zarf-cert
+  namespace: istio-system
+spec:
+  secretName: zarf-tls
+  dnsNames:
+    - "###ZARF_VAR_DOMAIN###"
+    - "*.###ZARF_VAR_DOMAIN###"
+  issuerRef:
+    name: zarf-issuer

@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpd-vs
+spec:
+  hosts:
+    - ###ZARF_VAR_DOMAIN###
+  gateways:
+    - istio-gateway/public-gateway
+  http:
+    - match:
+        - port: 80
+      redirect:
+        uri: https://###ZARF_VAR_DOMAIN###
+        status: MOVED_PERMANENTLY
+    - match:
+        - port: 443
+      route:
+        - destination:
+            host: httpd-service
+            port:
+              number: 443

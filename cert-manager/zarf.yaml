@@ -6,8 +6,6 @@ components:
   - name: cert-manager
     description: Deploy cert-manager
     required: true
-    variables:
-      domain_name: zarf.local
     charts:
       - name: cert-manager
         url: https://charts.jetstack.io
