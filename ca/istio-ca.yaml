@@ -1,0 +1,31 @@
+# https://github.com/cert-manager/website/blob/master/content/docs/tutorials/istio-csr/example/example-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: istio-issuer
+  namespace: istio-system
+spec:
+  ca:
+    secretName: root-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: istio-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  duration: 87600h # 10 years
+  secretName: istio-ca
+  commonName: istio-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    organizations:
+      - cluster.local
+      - cert-manager
+  issuerRef:
+    name: istio-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

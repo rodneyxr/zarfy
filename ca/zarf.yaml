@@ -2,17 +2,22 @@ kind: ZarfPackageConfig
 metadata:
   name: ca
 
-variables:
-  - name: DOMAIN
-    default: zarf.local
-    prompt: false
-
 components:
   - name: ca
     required: true
     manifests:
       - name: ca
-        namespace: istio-system
+        namespace: cert-manager
         files:
-          - certificate.yaml
-          - issuer.yaml
+          - root-ca.yaml
+          - intermediate-ca.yaml
+          # - istio-ca.yaml
+    actions:
+      onRemove:
+        before:
+          - cmd: |
+              ./zarf tools kubectl delete -n cert-manager secret root-ca intermediate-ca istio-ca
+              ./zarf tools kubectl delete -n cert-manager issuer istio-issuer
+              ./zarf tools kubectl delete -n cert-manager clusterissuer root-issuer intermediate-issuer
+              ./zarf tools kubectl delete -n cert-manager cert root-ca intermediate-ca istio-ca
+            description: Cleaning up CA resources

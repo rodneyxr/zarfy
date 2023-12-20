@@ -7,7 +7,9 @@ check:
 	@echo "ZARF_ARCH: ${ZARF_ARCH}"
 	@echo "INSTALL_LOCATION: ${INSTALL_LOCATION}"
 
-install: .zarf-install .zarf-init .kubeconfig
+install: install-cluster install-plugins
+
+install-cluster: .zarf-install .zarf-init .kubeconfig
 	@kubectl get pods -A
 
 uninstall: destroy
@@ -58,7 +60,7 @@ destroy:
 #######################################
 # PLUGINS
 #######################################
-install-plugins: install-istio install-cert-manager
+install-plugins: install-istio install-cert-manager install-ca install-httpd
 build-plugins: build-istio build-cert-manager
 clean-plugins: clean-istio clean-cert-manager
 
@@ -109,7 +111,7 @@ install-ca: build-ca
 
 build-ca: ${CA_PACKAGE}
 
-${CA_PACKAGE}: ca/
+${CA_PACKAGE}: ca/*.yaml
 	@echo "Building CA package"
 	@cd ca && zarf package create --confirm
 
@@ -127,7 +129,7 @@ install-httpd: build-httpd
 
 build-httpd: ${HTTPD_PACKAGE}
 
-${HTTPD_PACKAGE}: httpd/
+${HTTPD_PACKAGE}: httpd/*.yaml
 	@echo "Building HTTPD package"
 	@cd httpd && zarf package create --confirm
 

@@ -1,14 +1,17 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: httpd-tls-certificate
+  name: httpd-tls
+  namespace: httpd
 spec:
-  secretName: httpd-tls-secret
+  secretName: httpd-tls
   issuerRef:
-    name: zarf-ca
+    name: intermediate-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
   commonName: ###ZARF_VAR_DOMAIN###
   dnsNames:
     - ###ZARF_VAR_DOMAIN###
   privateKey:
-    algorithm: RSA
-    encoding: PKCS1
+    algorithm: ECDSA
+    size: 256

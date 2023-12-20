@@ -12,15 +12,16 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "*"
-      tls:
-        httpsRedirect: true
-    - port:
-        number: 443
-        name: https
-        protocol: HTTPS
-      hosts:
-        - "*"
-      tls:
-        mode: SIMPLE
-        credentialName: zarf-tls
+        - "zarf.local"
+        - "*.zarf.local"
+    #   tls:
+    #     httpsRedirect: true
+    # - port:
+    #     number: 443
+    #     name: https
+    #     protocol: HTTPS
+    #   hosts:
+    #     - "*"
+    #   tls:
+    #     mode: SIMPLE
+    #     credentialName: zarf-tls

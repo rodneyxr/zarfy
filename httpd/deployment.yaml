@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: httpd
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -20,24 +20,20 @@ spec:
         - containerPort: 443
         volumeMounts:
         - name: tls-certs
-          mountPath: /etc/ssl/certs
-          readOnly: true  # Ensure certs are read-only
-        - name: tls-private
-          mountPath: /etc/ssl/private
-          readOnly: true  # Ensure private key is read-only
-      volumes:
+          mountPath: /usr/local/apache2/conf/server.crt
+          subPath: server.crt
+          readOnly: true
         - name: tls-certs
-          secret:
-            secretName: istio-system/zarf-tls
-            items:
-            - key: tls.crt
-              path: tls.crt
-            - key: ca.crt
-              path: ca.crt
-        - name: tls-private
-          secret:
-            secretName: istio-system/zarf-tls
-            items:
-            - key: tls.key
-              path: tls.key
+          mountPath: /usr/local/apache2/conf/server.key
+          subPath: server.key
+          readOnly: true
+      volumes:
+      - name: tls-certs
+        secret:
+          secretName: httpd-tls
+          items:
+          - key: tls.crt
+            path: server.crt
+          - key: tls.key
+            path: server.key
             
