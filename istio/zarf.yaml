@@ -43,3 +43,14 @@ components:
                 name: istio-ingressgateway
                 namespace: istio-system
                 condition: available
+  - name: reflector
+    description: Deploy reflector for syncing resources across namespaces
+    required: true
+    charts:
+      - name: reflector
+        url: https://emberstack.github.io/helm-charts
+        version: 7.1.216
+        repoName: reflector
+        namespace: kube-system
+    images:
+      - docker.io/emberstack/kubernetes-reflector:7.1.216
