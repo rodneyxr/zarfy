@@ -4,9 +4,20 @@ metadata:
   name: httpd-vs
 spec:
   hosts:
-    - ###ZARF_VAR_DOMAIN###
+    - "###ZARF_VAR_DOMAIN###"
   gateways:
-    - istio-system/public-gateway
+    - httpd-gateway
+  tls:
+    - match:
+        - port: 443
+          sniHosts:
+            - "###ZARF_VAR_DOMAIN###"
+      route:
+        - destination:
+            host: httpd-service
+            port:
+              number: 443
+  # Comment this `http` section out to disable HTTP
   http:
     - match:
         - port: 80
@@ -15,16 +26,4 @@ spec:
             host: httpd-service
             port:
               number: 80
-  # http:
-  #   - match:
-  #       - port: 80
-  #     redirect:
-  #       uri: https://###ZARF_VAR_DOMAIN###
-  #       status: MOVED_PERMANENTLY
-  #   - match:
-  #       - port: 443
-  #     route:
-  #       - destination:
-  #           host: httpd-service
-  #           port:
-  #             number: 443
+

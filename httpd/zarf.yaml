@@ -15,6 +15,7 @@ components:
         namespace: httpd
         files:
           - certificate.yaml
+          - httpd-conf-configmap.yaml
           - deployment.yaml
           - service.yaml
           - gateway.yaml

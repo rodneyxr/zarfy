@@ -2,16 +2,17 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: httpd-tls
-  namespace: httpd
+  namespace: istio-system
 spec:
   secretName: httpd-tls
   issuerRef:
     name: intermediate-issuer
     kind: ClusterIssuer
     group: cert-manager.io
-  commonName: ###ZARF_VAR_DOMAIN###
+  commonName: "###ZARF_VAR_DOMAIN###"
   dnsNames:
-    - ###ZARF_VAR_DOMAIN###
+    - "###ZARF_VAR_DOMAIN###"
   privateKey:
-    algorithm: ECDSA
-    size: 256
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048

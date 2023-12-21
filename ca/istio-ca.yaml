@@ -19,8 +19,9 @@ spec:
   secretName: istio-ca
   commonName: istio-ca
   privateKey:
-    algorithm: ECDSA
-    size: 256
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
   subject:
     organizations:
       - cluster.local
