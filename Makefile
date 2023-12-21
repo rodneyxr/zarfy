@@ -7,7 +7,9 @@ check:
 	@echo "ZARF_ARCH: ${ZARF_ARCH}"
 	@echo "INSTALL_LOCATION: ${INSTALL_LOCATION}"
 
-install: .zarf-install .zarf-init .kubeconfig
+install: install-cluster install-plugins
+
+install-cluster: .zarf-install .zarf-init .kubeconfig
 	@kubectl get pods -A
 
 uninstall: destroy
@@ -58,7 +60,7 @@ destroy:
 #######################################
 # PLUGINS
 #######################################
-install-plugins: install-istio install-cert-manager
+install-plugins: install-istio install-cert-manager install-ca install-httpd
 build-plugins: build-istio build-cert-manager
 clean-plugins: clean-istio clean-cert-manager
 
@@ -73,7 +75,7 @@ install-istio: build-istio
 
 build-istio: ${ISTIO_PACKAGE}
 
-${ISTIO_PACKAGE}: istio/
+${ISTIO_PACKAGE}: istio/*.yaml
 	@echo "Building Istio package"
 	@cd istio && zarf package create --confirm
 
@@ -91,9 +93,45 @@ install-cert-manager: build-cert-manager
 
 build-cert-manager: ${CERT_MANAGER_PACKAGE}
 
-${CERT_MANAGER_PACKAGE}: cert-manager/
+${CERT_MANAGER_PACKAGE}: cert-manager/*.yaml
 	@echo "Building Cert Manager package"
 	@cd cert-manager && zarf package create --confirm
 
 clean-cert-manager:
 	@rm -f ${CERT_MANAGER_PACKAGE} || true
+
+#######################################
+# Certificate Authority
+#######################################
+CA_PACKAGE=ca/zarf-package-ca-${ZARF_ARCH}.tar.zst
+
+install-ca: build-ca
+	@echo "Installing CA package"
+	@zarf package deploy ${CA_PACKAGE} --confirm
+
+build-ca: ${CA_PACKAGE}
+
+${CA_PACKAGE}: ca/*.yaml
+	@echo "Building CA package"
+	@cd ca && zarf package create --confirm
+
+clean-ca:
+	@rm -f ${CA_PACKAGE} || true
+
+#######################################
+# HTTPD
+#######################################
+HTTPD_PACKAGE=httpd/zarf-package-httpd-${ZARF_ARCH}.tar.zst
+
+install-httpd: build-httpd
+	@echo "Installing HTTPD package"
+	@zarf package deploy ${HTTPD_PACKAGE} --confirm
+
+build-httpd: ${HTTPD_PACKAGE}
+
+${HTTPD_PACKAGE}: httpd/*.yaml
+	@echo "Building HTTPD package"
+	@cd httpd && zarf package create --confirm
+
+clean-httpd:
+	@rm -f ${HTTPD_PACKAGE} || true

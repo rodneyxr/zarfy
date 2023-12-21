@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: intermediate-issuer
+  namespace: cert-manager
+spec:
+  ca:
+    secretName: intermediate-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: intermediate-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  duration: 87600h # 10 years
+  secretName: intermediate-ca
+  commonName: intermediate-ca
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  subject:
+    organizations:
+      - cluster.local
+      - cert-manager
+  issuerRef:
+    name: root-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

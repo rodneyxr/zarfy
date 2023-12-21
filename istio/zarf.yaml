@@ -7,8 +7,6 @@ components:
   - name: istio
     description: Deploy istio
     required: true
-    variables:
-      domain_name: zarf.local
     charts:
       - name: istio-base
         url: https://istio-release.storage.googleapis.com/charts
@@ -22,11 +20,11 @@ components:
         version: 1.20.1
         repoName: istiod
         namespace: istio-system
-      - name: istio-ingress
+      - name: istio-ingressgateway
         url: https://istio-release.storage.googleapis.com/charts
         version: 1.20.1
         repoName: gateway
-        namespace: istio-ingress
+        namespace: istio-system
     images:
       - docker.io/istio/pilot:1.20.1
       - docker.io/istio/proxyv2:1.20.1
@@ -42,6 +40,6 @@ components:
           - wait:
               cluster:
                 kind: deployment
-                name: istio-ingress
-                namespace: istio-ingress
+                name: istio-ingressgateway
+                namespace: istio-system
                 condition: available

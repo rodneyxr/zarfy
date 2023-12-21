@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment
+spec:
+  selector:
+    matchLabels:
+      app: httpd
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+      - name: httpd
+        image: httpd:alpine3.19
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: tls-certs
+          mountPath: /usr/local/apache2/conf/server.crt
+          subPath: server.crt
+          readOnly: true
+        - name: tls-certs
+          mountPath: /usr/local/apache2/conf/server.key
+          subPath: server.key
+          readOnly: true
+        - name: httpd-conf
+          mountPath: /usr/local/apache2/conf/httpd.conf
+          subPath: httpd.conf
+          readOnly: true
+      volumes:
+      - name: tls-certs
+        secret:
+          secretName: httpd-tls
+          items:
+          - key: tls.crt
+            path: server.crt
+          - key: tls.key
+            path: server.key
+      - name: httpd-conf
+        configMap:
+          name: httpd-conf
+            
