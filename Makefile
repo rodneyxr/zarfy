@@ -60,9 +60,9 @@ destroy:
 #######################################
 # PLUGINS
 #######################################
-install-plugins: install-istio install-cert-manager install-ca install-httpd
-build-plugins: build-istio build-cert-manager
-clean-plugins: clean-istio clean-cert-manager
+install-plugins: install-istio install-cert-manager install-ca
+build-plugins: build-istio build-cert-manager build-ca
+clean-plugins: clean-istio clean-cert-manager clean-ca
 
 #######################################
 # Istio
