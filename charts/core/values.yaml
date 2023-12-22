@@ -1,0 +1,19 @@
+postgresql:
+  auth:
+    postgresPassword: admin
+    username: bn_keycloak
+    password: postgres
+    database: bitnami_keycloak
+
+keycloak:
+  auth:
+    adminUser: admin
+    adminPassword: admin
+  postgresql:
+    enabled: false # Disable the built-in PostgreSQL deployment
+  externalDatabase:
+    host: core-postgresql
+    port: 5432
+    database: bitnami_keycloak
+    username: bn_keycloak
+    password: postgres

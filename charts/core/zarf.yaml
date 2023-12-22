@@ -1,0 +1,18 @@
+kind: ZarfPackageConfig
+metadata:
+  name: core
+  description: A Helm chart for core services
+
+components:
+  - name: core
+    required: true
+    charts:
+      - name: core
+        version: 0.0.1
+        namespace: core
+        localPath: .
+        valuesFiles:
+          - values.yaml
+    images:
+      - docker.io/bitnami/postgresql:16.1.0-debian-11-r16
+      - docker.io/bitnami/keycloak:22.0.5-debian-11-r4

@@ -56,6 +56,7 @@ destroy:
 	@mkdir -p ~/.kube
 	@sudo cp /root/.kube/config ~/.kube/config
 	@sudo chown -R $(id -u):$(id -g) ~/.kube
+	@chmod 600 ~/.kube/config
 
 #######################################
 # PLUGINS
