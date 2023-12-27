@@ -1,3 +1,6 @@
+core:
+  domain: zarf.local
+
 postgresql:
   auth:
     postgresPassword: admin
