@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: keycloak-virtualservice
+spec:
+  hosts:
+    - keycloak.{{ .Values.core.domain }}
+  gateways:
+    - keycloak-gateway
+  tls:
+    - match:
+        - port: {{ .Values.keycloak.service.ports.https }}
+          sniHosts:
+            - keycloak.{{ .Values.core.domain }}
+      route:
+        - destination:
+            host: {{ .Chart.Name }}-keycloak.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: {{ .Values.keycloak.service.ports.https }}
+  # # Comment this `http` section out to disable HTTP
+  # http:
+  #   - match:
+  #       - port: 80
+  #     route:
+  #       - destination:
+  #           host: {{ .Chart.Name }}-keycloak-headless.{{ .Release.Namespace }}.svc.cluster.local
+  #           port:
+  #             number: 80

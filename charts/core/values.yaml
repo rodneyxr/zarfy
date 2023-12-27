@@ -1,6 +1,7 @@
 core:
-  domain: zarf.local
+  domain: ###ZARF_VAR_DOMAIN###
 
+# SUBCHART: bitnami/postgresql/values.yaml
 postgresql:
   auth:
     postgresPassword: admin
@@ -8,7 +9,9 @@ postgresql:
     password: postgres
     database: bitnami_keycloak
 
+# SUBCHART: bitnami/keycloak/values.yaml
 keycloak:
+  production: true
   auth:
     adminUser: admin
     adminPassword: admin
@@ -20,3 +23,10 @@ keycloak:
     database: bitnami_keycloak
     username: bn_keycloak
     password: postgres
+  service:
+    http:
+      enabled: false
+  tls:
+    enabled: true
+    existingSecret: keycloak-tls
+    usePem: true

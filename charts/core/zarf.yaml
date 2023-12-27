@@ -16,3 +16,9 @@ components:
     images:
       - docker.io/bitnami/postgresql:16.1.0-debian-11-r16
       - docker.io/bitnami/keycloak:22.0.5-debian-11-r4
+    actions:
+      onRemove:
+        before:
+          - cmd: ./zarf tools helm uninstall core -n core
+          - cmd: ./zarf tools kubectl delete pvc -l app.kubernetes.io/instance=core -n core
+          - cmd: ./zarf tools kubectl delete ns core

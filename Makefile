@@ -136,3 +136,39 @@ ${HTTPD_PACKAGE}: httpd/*.yaml
 
 clean-httpd:
 	@rm -f ${HTTPD_PACKAGE} || true
+
+#######################################
+# CORE
+#######################################
+CORE_PACKAGE=charts/core/zarf-package-core-${ZARF_ARCH}.tar.zst
+
+install-core: build-core
+	@echo "Installing Core package"
+	@zarf package deploy ${CORE_PACKAGE} --confirm
+
+build-core: ${CORE_PACKAGE}
+
+${CORE_PACKAGE}: charts/core/*.yaml
+	@echo "Building Core package"
+	@cd charts/core && zarf package create --confirm
+
+clean-core:
+	@rm -f ${CORE_PACKAGE} || true
+
+#######################################
+# ZARFY
+#######################################
+ZARFY_PACKAGE=./zarf-package-zarfy-${ZARF_ARCH}.tar.zst
+
+install-zarfy: build-zarfy
+	@echo "Installing Zarfy package"
+	@zarf package deploy ${ZARFY_PACKAGE} --components=core --confirm
+
+build-zarfy: ${ZARFY_PACKAGE}
+
+${ZARFY_PACKAGE}: *.yaml **/*.yaml
+	@echo "Building Zarfy package"
+	@zarf package create --confirm
+
+clean-zarfy:
+	@rm -f ${ZARFY_PACKAGE} || true

@@ -1,0 +1,31 @@
+kind: ZarfPackageConfig
+metadata:
+  name: zarfy
+  description: "Deploy zarf cluster and core services"
+  architecture: amd64
+
+variables:
+  - name: DOMAIN
+    default: zarf.local
+    prompt: true
+
+components:
+  - name: istio
+    required: true
+    import:
+      path: ./istio
+
+  - name: cert-manager
+    required: true
+    import:
+      path: ./cert-manager
+
+  - name: ca
+    required: true
+    import:
+      path: ./ca
+
+  - name: core
+    required: false
+    import:
+      path: ./charts/core

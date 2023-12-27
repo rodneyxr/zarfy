@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: keycloak-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: {{ .Values.keycloak.service.ports.http }}
+        name: http
+        protocol: HTTP
+      hosts:
+        - keycloak.{{ .Values.core.domain }}
+      # Redirect HTTP traffic to HTTPS
+      tls:
+        httpsRedirect: true
+    - port:
+        number: {{ .Values.keycloak.service.ports.https }}
+        name: https
+        protocol: HTTPS
+      hosts:
+        - keycloak.{{ .Values.core.domain }}
+      tls:
+        mode: PASSTHROUGH
+        # credentialName: keycloak-tls # not needed for passthrough
