@@ -3,6 +3,11 @@ metadata:
   name: core
   description: A Helm chart for core services
 
+variables:
+  - name: DOMAIN
+    default: zarf.local
+    prompt: false
+
 components:
   - name: core
     required: true
@@ -16,9 +21,9 @@ components:
     images:
       - docker.io/bitnami/postgresql:16.1.0-debian-11-r16
       - docker.io/bitnami/keycloak:22.0.5-debian-11-r4
+      - docker.io/bitnami/keycloak-config-cli:5.9.0-debian-11-r1
     actions:
       onRemove:
-        before:
-          - cmd: ./zarf tools helm uninstall core -n core
+        after:
           - cmd: ./zarf tools kubectl delete pvc -l app.kubernetes.io/instance=core -n core
           - cmd: ./zarf tools kubectl delete ns core

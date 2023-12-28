@@ -7,7 +7,7 @@ check:
 	@echo "ZARF_ARCH: ${ZARF_ARCH}"
 	@echo "INSTALL_LOCATION: ${INSTALL_LOCATION}"
 
-install: install-cluster install-plugins
+install: install-cluster install-zarfy
 
 install-cluster: .zarf-install .zarf-init .kubeconfig
 	@kubectl get pods -A
@@ -166,7 +166,7 @@ install-zarfy: build-zarfy
 
 build-zarfy: ${ZARFY_PACKAGE}
 
-${ZARFY_PACKAGE}: *.yaml **/*.yaml
+${ZARFY_PACKAGE}: *.yaml **/*.yaml **/**/*.yaml
 	@echo "Building Zarfy package"
 	@zarf package create --confirm
 
